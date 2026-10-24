@@ -1,0 +1,42 @@
+ANALISIS DE RED DE COLABORADORES
+================================
+Archivo de entrada	red.csv
+Vertices	14
+Aristas dirigidas	16
+Componentes conexas debiles	2
+  Componente 1	Ada, Beto, Cora, Dario, Eva, Fabio, Gina, Hugo, Iris, Juan, Kira
+  Componente 2	Lia, Mateo, Nico
+Ciclo dirigido	SI
+Ciclo no dirigido	SI
+
+Grado de influencia (salida = relaciones iniciadas; entrada = relaciones recibidas)
+Colaborador	Entrada	Salida
+Ada	0	2
+Beto	1	1
+Cora	2	1
+Dario	2	1
+Eva	2	2
+Fabio	1	1
+Gina	2	1
+Hugo	1	1
+Iris	1	2
+Juan	1	1
+Kira	1	1
+Lia	0	1
+Mateo	1	1
+Nico	1	0
+
+Camino simple mas largo dirigido	Ada -> Kira
+  Aristas	8
+  Ruta	Ada -> Beto -> Dario -> Eva -> Gina -> Hugo -> Iris -> Juan -> Kira
+
+Puntos de articulacion (grafo no dirigido)	Eva, Mateo
+
+Complejidad
+  Componentes y ciclos	O(V + E)
+  Grados	O(V + E)
+  Articulaciones (Tarjan)	O(V + E)
+  Camino simple mas largo	Exponencial en el peor caso; O(V!) como cota general
+  Poda	Se descarta una rama si aristas actuales + vertices no visitados <= mejor longitud
+
+Nota: la ruta mas larga simple es NP-dificil en general; los pesos son unitarios.
