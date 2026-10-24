@@ -2,20 +2,20 @@
 
 Proyecto del examen práctico de Estructuras de Datos y Algoritmia. Modela colaboradores como vértices y relaciones dirigidas como aristas; calcula comunidades, ciclos, grados, caminos simples máximos y colaboradores puente.
 
-> **Versión documentada.** La entrega completa descrita aquí está en [red-colaboradores.zip](red-colaboradores.zip). Al extraerlo se crea la carpeta \`red-colaboradores/\`, con su propio README, POM, código fuente, pruebas, datos y reporte. La carpeta \`src/\` que ya está en la raíz del repositorio conserva una implementación anterior en Java; ambas versiones se describen por separado al final.
+> **Versión documentada.** La entrega completa descrita aquí está en [red-colaboradores.zip](red-colaboradores.zip). Al extraerlo se crea la carpeta `red-colaboradores/`, con su propio README, POM, código fuente, pruebas, datos y reporte. La carpeta `src/` que ya está en la raíz del repositorio conserva una implementación anterior en Java; ambas versiones se describen por separado al final.
 
 ## Entrega y archivos
 
-- [Paquete Java completo](red-colaboradores.zip): código, pruebas JUnit 5, datos de ejemplo, documentación y \`reporte.pdf\`.
+- [Paquete Java completo](red-colaboradores.zip): código, pruebas JUnit 5, datos de ejemplo, documentación y `reporte.pdf`.
 - [CSV de la red de ejemplo](data/red.csv): versión tabular de los datos incluidos en el paquete.
 - [Resultados de ejemplo](resultados.txt): análisis de la red de 16 colaboradores, con tres componentes débiles.
-- El reporte profesional \`reporte.pdf\` está dentro del ZIP en \`red-colaboradores/reporte.pdf\`.
+- El reporte profesional `reporte.pdf` está dentro del ZIP en `red-colaboradores/reporte.pdf`.
 
 ## Modelo y convenciones
 
-Cada colaborador es un nodo. Una arista \`u → v\` significa que **u reporta a v**. El grafo es dirigido y no ponderado: cada arista tiene peso unitario y la longitud de un camino se mide por su número de aristas.
+Cada colaborador es un nodo. Una arista `u → v` significa que **u reporta a v**. El grafo es dirigido y no ponderado: cada arista tiene peso unitario y la longitud de un camino se mide por su número de aristas.
 
-El programa conserva los sucesores y predecesores de cada nodo. Para conectividad, ciclos no dirigidos y puntos de articulación deriva una vista no dirigida: existe una conexión entre dos nodos si hay una arista en cualquiera de los sentidos. Esa vista colapsa las relaciones mutuas \`u → v\` y \`v → u\` en una sola conexión.
+El programa conserva los sucesores y predecesores de cada nodo. Para conectividad, ciclos no dirigidos y puntos de articulación deriva una vista no dirigida: existe una conexión entre dos nodos si hay una arista en cualquiera de los sentidos. Esa vista colapsa las relaciones mutuas `u → v` y `v → u` en una sola conexión.
 
 - **Grado de salida:** colaboradores a quienes el nodo reporta.
 - **Grado de entrada:** colaboradores que reportan a ese nodo.
@@ -41,17 +41,17 @@ V es el número de nodos, E el número de aristas dirigidas, Eᵤ el número de 
 
 ### Justificación de estructuras de datos
 
-El grafo usa \`LinkedHashMap\` y \`LinkedHashSet\`, variantes de \`HashMap\` y \`HashSet\`. Las tablas hash ofrecen inserción, consulta y pertenencia O(1) esperadas; las variantes enlazadas conservan el orden de inserción para que recorridos, ciclos y reportes sean reproducibles. Los conjuntos también impiden contar dos veces una arista idéntica.
+El grafo usa `LinkedHashMap` y `LinkedHashSet`, variantes de `HashMap` y `HashSet`. Las tablas hash ofrecen inserción, consulta y pertenencia O(1) esperadas; las variantes enlazadas conservan el orden de inserción para que recorridos, ciclos y reportes sean reproducibles. Los conjuntos también impiden contar dos veces una arista idéntica.
 
 Los sucesores permiten recorrer aristas salientes y calcular grados de salida; los predecesores permiten lo mismo para las entradas. Mantener ambos índices hace directas estas consultas. La vista no dirigida se construye bajo demanda, se almacena en caché y se invalida si cambia el grafo: así hay una única fuente de verdad para las aristas dirigidas y no se mantienen dos grafos mutables que puedan desincronizarse.
 
-Los recorridos usan \`ArrayDeque\` como cola BFS y como pila explícita DFS. Evita la sincronización heredada por \`Stack\` de \`Vector\` y el objeto de enlace por elemento y acceso disperso de \`LinkedList\`. La pila explícita evita desbordar la pila de llamadas en DFS de grafos profundos. Los conjuntos de visitados proporcionan consultas esperadas O(1).
+Los recorridos usan `ArrayDeque` como cola BFS y como pila explícita DFS. Evita la sincronización heredada por `Stack` de `Vector` y el objeto de enlace por elemento y acceso disperso de `LinkedList`. La pila explícita evita desbordar la pila de llamadas en DFS de grafos profundos. Los conjuntos de visitados proporcionan consultas esperadas O(1).
 
 ### Justificación del formato y del parser
 
-JSON es el formato principal porque separa explícitamente las colecciones \`nodos\` y \`aristas\`. Esto representa sin ambigüedad los nodos aislados, distingue datos de estructura y permite extender registros. \`JsonMinimo\` implementa un parser de descenso recursivo para el esquema JSON requerido, en O(n) respecto al tamaño del documento, sin incorporar una biblioteca externa.
+JSON es el formato principal porque separa explícitamente las colecciones `nodos` y `aristas`. Esto representa sin ambigüedad los nodos aislados, distingue datos de estructura y permite extender registros. `JsonMinimo` implementa un parser de descenso recursivo para el esquema JSON requerido, en O(n) respecto al tamaño del documento, sin incorporar una biblioteca externa.
 
-También se admite CSV para editar o producir datos desde una hoja de cálculo. El cargador acepta encabezado opcional, comentarios iniciados con \`#\`, campos entrecomillados y filas que declaran un nodo aislado. No se utilizan bibliotecas externas de grafos; el código de producción utiliza el JDK estándar. JUnit 5 solo es dependencia de pruebas.
+También se admite CSV para editar o producir datos desde una hoja de cálculo. El cargador acepta encabezado opcional, comentarios iniciados con `#`, campos entrecomillados y filas que declaran un nodo aislado. No se utilizan bibliotecas externas de grafos; el código de producción utiliza el JDK estándar. JUnit 5 solo es dependencia de pruebas.
 
 ### Justificación de la poda del camino más largo
 
@@ -68,28 +68,28 @@ Primero se evalúa la cota barata |R| ≤ V − número de nodos del camino; des
 
 ### JSON
 
-El objeto admite las claves opcionales \`nodos\` y \`aristas\`. Los identificadores declarados permiten representar colaboradores aislados:
+El objeto admite las claves opcionales `nodos` y `aristas`. Los identificadores declarados permiten representar colaboradores aislados:
 
-\`\`\`json
+```json
 {
   "nodos": ["Ana", "Beto", "Paula"],
   "aristas": [
     {"origen": "Beto", "destino": "Ana"}
   ]
 }
-\`\`\`
+```
 
 ### CSV
 
-Cada fila representa una arista \`origen,destino\`. Una fila con un solo valor o destino vacío declara un nodo aislado:
+Cada fila representa una arista `origen,destino`. Una fila con un solo valor o destino vacío declara un nodo aislado:
 
-\`\`\`csv
+```csv
 origen,destino
 Beto,Ana
 Paula,
-\`\`\`
+```
 
-Si una arista menciona un nodo no declarado, el cargador lo crea automáticamente. Las extensiones aceptadas son \`.json\` y \`.csv\`.
+Si una arista menciona un nodo no declarado, el cargador lo crea automáticamente. Las extensiones aceptadas son `.json` y `.csv`.
 
 ## Compilar, probar y ejecutar
 
@@ -103,11 +103,11 @@ mvn clean package
 java -cp target/classes consultora.red.Main data/red.json -o resultados.txt --par Hugo Ana --par Irene Fabián --par Paula Ana
 ~~~
 
-El argumento de archivo puede ser JSON o CSV. \`-o\` cambia el archivo de salida y \`--par ORIGEN DESTINO\` puede repetirse para solicitar varios caminos. Si no se indica un archivo de entrada, se usa \`data/red.json\`; el archivo de salida predeterminado es \`resultados.txt\`.
+El argumento de archivo puede ser JSON o CSV. `-o` cambia el archivo de salida y `--par ORIGEN DESTINO` puede repetirse para solicitar varios caminos. Si no se indica un archivo de entrada, se usa `data/red.json`; el archivo de salida predeterminado es `resultados.txt`.
 
 ## Pruebas y casos límite
 
-La versión del ZIP tiene **74 pruebas JUnit 5**. Se ejecutó \`mvn clean test\`: 74 pruebas aprobadas, 0 fallidas y 0 errores. La suite cubre los seis casos exigidos en el examen: grafo con ciclo, árbol, dos componentes, un nodo, grafo vacío y auto-lazo.
+La versión del ZIP tiene **74 pruebas JUnit 5**. Se ejecutó `mvn clean test`: 74 pruebas aprobadas, 0 fallidas y 0 errores. La suite cubre los seis casos exigidos en el examen: grafo con ciclo, árbol, dos componentes, un nodo, grafo vacío y auto-lazo.
 
 También valida lectura JSON/CSV, aristas duplicadas, nombres con acentos, grados, ciclos, caminos y articulaciones. Compara resultados con oráculos independientes: ordenamiento de Kahn para ciclos dirigidos, búsqueda exhaustiva sin poda para caminos máximos, programación dinámica en DAG y eliminación de nodos para puntos de articulación; incluye grafos aleatorios con semilla fija y recorridos profundos.
 
@@ -117,7 +117,7 @@ El archivo [resultados.txt](resultados.txt) corresponde a la red de ejemplo de 1
 
 ## Implementación anterior en la raíz
 
-La carpeta \`src/main/java/mx/edu/estructuras/red/\` y sus pruebas en \`src/test/java/\` pertenecen a la implementación anterior en Java que ya estaba en el repositorio. Su archivo CSV independiente es \`red.csv\`. El paquete completo y los algoritmos descritos en las secciones anteriores se encuentran dentro de \`red-colaboradores.zip\`.
+La carpeta `src/main/java/mx/edu/estructuras/red/` y sus pruebas en `src/test/java/` pertenecen a la implementación anterior en Java que ya estaba en el repositorio. Su archivo CSV independiente es `red.csv`. El paquete completo y los algoritmos descritos en las secciones anteriores se encuentran dentro de `red-colaboradores.zip`.
 
 ## Referencias algorítmicas
 
