@@ -1,0 +1,18 @@
+# Red de colaboradores: "origen reporta a destino". Una fila con un solo valor declara un nodo aislado.
+origen,destino
+Beto,Ana
+Carla,Ana
+Diego,Beto
+Elena,Beto
+Elena,Carla
+Fabián,Carla
+Gloria,Carla
+Hugo,Diego
+Irene,Elena
+Jorge,Gloria
+Jorge,Karla
+Karla,Luis
+Luis,Jorge
+Nora,Marta
+Óscar,Marta
+Paula,
