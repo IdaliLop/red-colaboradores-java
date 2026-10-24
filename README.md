@@ -4,13 +4,6 @@ Proyecto del examen práctico de Estructuras de Datos y Algoritmia. Modela colab
 
 > **Versión documentada.** La entrega completa descrita aquí está en [red-colaboradores.zip](red-colaboradores.zip). Al extraerlo se crea la carpeta `red-colaboradores/`, con su propio README, POM, código fuente, pruebas, datos y reporte. La carpeta `src/` que ya está en la raíz del repositorio conserva una implementación anterior en Java; ambas versiones se describen por separado al final.
 
-## Entrega y archivos
-
-- [Paquete Java completo](red-colaboradores.zip): código, pruebas JUnit 5, datos de ejemplo, documentación y `reporte.pdf`.
-- [CSV de la red de ejemplo](data/red.csv): versión tabular de los datos incluidos en el paquete.
-- [Resultados de ejemplo](resultados.txt): análisis de la red de 16 colaboradores, con tres componentes débiles.
-- El reporte profesional `reporte.pdf` está dentro del ZIP en `red-colaboradores/reporte.pdf`.
-
 ## Modelo y convenciones
 
 Cada colaborador es un nodo. Una arista `u → v` significa que **u reporta a v**. El grafo es dirigido y no ponderado: cada arista tiene peso unitario y la longitud de un camino se mide por su número de aristas.
