@@ -1,42 +1,84 @@
-ANALISIS DE RED DE COLABORADORES
-================================
-Archivo de entrada	red.csv
-Vertices	14
-Aristas dirigidas	16
-Componentes conexas debiles	2
-  Componente 1	Ada, Beto, Cora, Dario, Eva, Fabio, Gina, Hugo, Iris, Juan, Kira
-  Componente 2	Lia, Mateo, Nico
-Ciclo dirigido	SI
-Ciclo no dirigido	SI
+==============================================================================
+ ANÁLISIS DE LA RED DE COLABORADORES
+==============================================================================
+Fuente de datos : data/red.json
+Nodos           : 16
+Aristas         : 15 dirigidas | 15 no dirigidas (derivadas) | 0 auto-lazos
+Convención      : A -> B  significa  "A reporta a B"
 
-Grado de influencia (salida = relaciones iniciadas; entrada = relaciones recibidas)
-Colaborador	Entrada	Salida
-Ada	0	2
-Beto	1	1
-Cora	2	1
-Dario	2	1
-Eva	2	2
-Fabio	1	1
-Gina	2	1
-Hugo	1	1
-Iris	1	2
-Juan	1	1
-Kira	1	1
-Lia	0	1
-Mateo	1	1
-Nico	1	0
+1. COMUNIDADES AISLADAS (componentes conexas, BFS)
+   +---+--------+---------------------------------------------------------------------------------+
+   | # | Tamaño | Miembros                                                                        |
+   +---+--------+---------------------------------------------------------------------------------+
+   | 1 |     12 | Ana, Beto, Carla, Diego, Elena, Fabián, Gloria, Hugo, Irene, Jorge, Karla, Luis |
+   | 2 |      3 | Marta, Nora, Óscar                                                              |
+   | 3 |      1 | Paula                                                                           |
+   +---+--------+---------------------------------------------------------------------------------+
+   Total de componentes: 3
 
-Camino simple mas largo dirigido	Ada -> Kira
-  Aristas	8
-  Ruta	Ada -> Beto -> Dario -> Eva -> Gina -> Hugo -> Iris -> Juan -> Kira
+2. DETECCIÓN DE CICLOS (DFS)
+   Dependencias (dirigido)   : SÍ  Jorge -> Karla -> Luis -> Jorge
+                               => JERARQUÍA INVÁLIDA: existe una cadena circular de reporte
+   Relaciones (no dirigido)  : SÍ  Ana -> Beto -> Elena -> Carla -> Ana
+                               => existe un bucle de relaciones (redundancia de rutas)
 
-Puntos de articulacion (grafo no dirigido)	Eva, Mateo
+3. GRADO DE INFLUENCIA (ordenado por entrada + salida)
+   +-------------+---------+--------+-------+
+   | Colaborador | Entrada | Salida | Total |
+   +-------------+---------+--------+-------+
+   | Carla       |       3 |      1 |     4 |
+   | Beto        |       2 |      1 |     3 |
+   | Elena       |       1 |      2 |     3 |
+   | Jorge       |       1 |      2 |     3 |
+   | Ana         |       2 |      0 |     2 |
+   | Marta       |       2 |      0 |     2 |
+   | Diego       |       1 |      1 |     2 |
+   | Gloria      |       1 |      1 |     2 |
+   | Karla       |       1 |      1 |     2 |
+   | Luis        |       1 |      1 |     2 |
+   | Fabián      |       0 |      1 |     1 |
+   | Hugo        |       0 |      1 |     1 |
+   | Irene       |       0 |      1 |     1 |
+   | Nora        |       0 |      1 |     1 |
+   | Óscar       |       0 |      1 |     1 |
+   | Paula       |       0 |      0 |     0 |
+   +-------------+---------+--------+-------+
+   Entrada = personas que le reportan | Salida = personas a quienes reporta
 
-Complejidad
-  Componentes y ciclos	O(V + E)
-  Grados	O(V + E)
-  Articulaciones (Tarjan)	O(V + E)
-  Camino simple mas largo	Exponencial en el peor caso; O(V!) como cota general
-  Poda	Se descarta una rama si aristas actuales + vertices no visitados <= mejor longitud
+4. CAMINO SIMPLE MÁS LARGO (backtracking con poda; NP-difícil en general)
+   Par: Hugo -> Ana
+   +-------------+---------+------------------------------------------------+-------------+
+   | Modo        | Aristas | Camino                                         | Expansiones |
+   +-------------+---------+------------------------------------------------+-------------+
+   | Dirigido    |       3 | Hugo -> Diego -> Beto -> Ana                   |           4 |
+   | No dirigido |       5 | Hugo -> Diego -> Beto -> Elena -> Carla -> Ana |          10 |
+   +-------------+---------+------------------------------------------------+-------------+
+   Par: Irene -> Fabián
+   +-------------+---------+--------------------------------------------------+-------------+
+   | Modo        | Aristas | Camino                                           | Expansiones |
+   +-------------+---------+--------------------------------------------------+-------------+
+   | Dirigido    |       - | sin camino                                       |           - |
+   | No dirigido |       5 | Irene -> Elena -> Beto -> Ana -> Carla -> Fabián |          12 |
+   +-------------+---------+--------------------------------------------------+-------------+
+   Par: Paula -> Ana
+   +-------------+---------+------------+-------------+
+   | Modo        | Aristas | Camino     | Expansiones |
+   +-------------+---------+------------+-------------+
+   | Dirigido    |       - | sin camino |           - |
+   | No dirigido |       - | sin camino |           - |
+   +-------------+---------+------------+-------------+
 
-Nota: la ruta mas larga simple es NP-dificil en general; los pesos son unitarios.
+5. COLABORADORES PUENTE (puntos de articulación, Tarjan)
+   +--------------------+---------+--------------------------+
+   | Colaborador puente | Vecinos | Fragmentos al eliminarlo |
+   +--------------------+---------+--------------------------+
+   | Beto               |       3 |                        2 |
+   | Carla              |       4 |                        3 |
+   | Diego              |       2 |                        2 |
+   | Elena              |       3 |                        2 |
+   | Gloria             |       2 |                        2 |
+   | Jorge              |       3 |                        2 |
+   | Marta              |       2 |                        2 |
+   +--------------------+---------+--------------------------+
+   Total de puentes: 7
+==============================================================================
