@@ -26,16 +26,16 @@ El programa conserva los sucesores y predecesores de cada nodo. Para conectivida
 
 ## Requisitos funcionales y algoritmos
 
-| Requisito | Implementación | Clases principales | Complejidad |
-|---|---|---|---|
-| RF1. Cargar JSON o CSV | Valida el esquema, crea nodos declarados y nodos que aparezcan en aristas, e ignora aristas duplicadas. | \`CargadorRed\`, \`JsonMinimo\`, \`Grafo\` | O(n) para leer n caracteres; O(V + E) para construir el grafo, en promedio. |
-| RF2. Comunidades aisladas | BFS sobre la vista no dirigida; devuelve las componentes de mayor a menor tamaño. | \`Componentes\` | O(V + Eᵤ) |
-| RF2. Ciclos dirigidos | DFS iterativo con estados blanco, gris y negro. Una arista hacia un nodo gris identifica un ciclo y se reconstruye la ruta. | \`Ciclos\` | O(V + E) |
-| RF2. Ciclos no dirigidos | DFS sobre la vista no dirigida; una arista a un nodo visitado que no sea el padre identifica un ciclo. | \`Ciclos\` | O(V + Eᵤ) |
-| RF3. Grados de entrada y salida | Cuenta predecesores y sucesores en las listas de adyacencia y genera el ranking de influencia. | \`Grados\` | O(V + E) |
-| RF4. Camino simple más largo | Backtracking entre cada par solicitado; calcula versiones dirigida y no dirigida. Usa cotas seguras para podar ramas. | \`CaminoMasLargo\` | O(V! · (V + E)) en el peor caso general. |
-| RF5. Colaboradores puente | Tarjan/Hopcroft–Tarjan iterativo sobre la vista no dirigida; también calcula cuántos fragmentos quedan al eliminar un nodo. | \`PuntosArticulacion\` | O(V + Eᵤ) |
-| RF6. Reporte | Imprime las mismas tablas en consola y en UTF-8 a \`resultados.txt\`. | \`Reporte\`, \`Main\` | O(t) para generar y escribir t caracteres, además del análisis. |
+| Requisito | Implementación | Clases principales | Tiempo | Espacio adicional |
+|---|---|---|---|---|
+| RF1. Cargar JSON o CSV | Valida el esquema y crea nodos declarados y nodos mencionados por aristas; ignora duplicados. | `CargadorRed`, `JsonMinimo`, `Grafo` | O(n + V + E) | O(n + V + E) durante parseo; el grafo ocupa O(V + E). |
+| RF2. Comunidades aisladas | BFS sobre la vista no dirigida; devuelve componentes de mayor a menor tamaño. | `Componentes` | O(V + Eᵤ) | O(V) |
+| RF2. Ciclos dirigidos | DFS iterativo con estados blanco, gris y negro; reconstruye el ciclo encontrado. | `Ciclos` | O(V + E) | O(V) |
+| RF2. Ciclos no dirigidos | DFS sobre la vista no dirigida; una arista a un nodo visitado que no sea el padre identifica un ciclo. | `Ciclos` | O(V + Eᵤ) | O(V) |
+| RF3. Grados de entrada y salida | Cuenta predecesores y sucesores y genera el ranking de influencia. | `Grados` | O(V + E) | O(V) para los resultados. |
+| RF4. Camino simple más largo | Backtracking entre cada par solicitado; calcula versiones dirigida y no dirigida, con cotas de poda seguras. | `CaminoMasLargo` | O(V! · (V + E)) en el peor caso general. | O(V), sin contar el grafo. |
+| RF5. Colaboradores puente | Tarjan/Hopcroft–Tarjan iterativo sobre la vista no dirigida; cuenta fragmentos al eliminar un nodo. | `PuntosArticulacion` | O(V + Eᵤ) | O(V) |
+| RF6. Reporte | Imprime las mismas tablas en consola y en UTF-8 a `resultados.txt`. | `Reporte`, `Main` | O(t) para generar y escribir t caracteres, además del análisis. | O(t) para el texto del reporte. |
 
 V es el número de nodos, E el número de aristas dirigidas, Eᵤ el número de conexiones únicas de la vista no dirigida y n la longitud del archivo de entrada.
 
