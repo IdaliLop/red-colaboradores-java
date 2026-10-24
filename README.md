@@ -4,7 +4,7 @@ Repositorio del examen práctico de Estructuras de Datos y Algoritmia. Contiene 
 
 ## Paquete adjunto
 
-- [Descargar el ZIP original](red-colaboradores.zip). Incluye el proyecto Java 17, su README y POM, código fuente, pruebas JUnit 5, reporte PDF, datos JSON y CSV, y archivos de apoyo. Al extraerlo, el proyecto queda en la carpeta `red-colaboradores/`; sigue el README incluido y ejecuta `mvn clean test` desde esa carpeta.
+- [Descargar el ZIP original](red-colaboradores.zip). Incluye el proyecto Java 17, su README y POM, código fuente, 74 pruebas JUnit 5 (74/74 pasan con `mvn clean test`), reporte PDF, datos JSON y CSV, y archivos de apoyo. Al extraerlo, el proyecto queda en la carpeta `red-colaboradores/`; sigue el README incluido y ejecuta `mvn clean test` desde esa carpeta.
 - [CSV de la red adjunta](data/red.csv). Es la copia extraída del ZIP y representa la misma red que `red-colaboradores/data/red.json`, incluida dentro del paquete.
 - [Resultados adjuntos](resultados.txt). Corresponden a la red de 16 nodos y 15 aristas de `data/red.json` dentro del ZIP.
 
