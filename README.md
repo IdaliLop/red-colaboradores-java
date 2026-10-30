@@ -119,3 +119,18 @@ La carpeta `src/main/java/mx/edu/estructuras/red/` y sus pruebas en `src/test/ja
 - J. Hopcroft y R. Tarjan. “Algorithm 447: Efficient Algorithms for Graph Manipulation”. *Communications of the ACM*, 16(6), 1973.
 - M. R. Garey y D. S. Johnson. *Computers and Intractability*, 1979. Complejidad de problemas de caminos.
 - A. B. Kahn. “Topological Sorting of Large Networks”. *Communications of the ACM*, 5(11), 1962. Referencia para la validación de ciclos y DAG.
+
+
+## Entorno gráfico interactivo (Swing)
+
+La implementación de la raíz incluye una interfaz de escritorio para explorar y editar la red con el mismo modelo y los mismos algoritmos del examen. Requiere JDK 17 y Maven; Swing forma parte del JDK y no añade dependencias externas.
+
+~~~powershell
+mvn clean package
+java -cp target/classes mx.edu.estructuras.red.GraphStudio
+~~~
+
+La ventana permite cargar CSV (registros tipo,nodo y tipo,arista) o JSON (claves nodos y aristas), crear y eliminar colaboradores y relaciones dirigidas, mover nodos en el lienzo y ejecutar los análisis del examen. Los resultados incluyen componentes débiles, ciclos dirigidos y no dirigidos, grados, caminos simples más largos en ambas interpretaciones y puntos de articulación. El camino encontrado se anima y resalta sobre el grafo.
+
+Desde la barra superior se puede exportar el lienzo como PNG, cambiar entre tema claro y oscuro y guardar o restaurar una sesión. El archivo .redsession es un formato de texto versionado propio que conserva nodos, aristas, posiciones, tema y extremos del camino; las etiquetas se codifican como UTF-8 en Base64. No depende de Serializable de Java.
+

@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Grafo dirigido ponderado con peso unitario y su proyeccion no dirigida.
+ * Grafo dirigido no ponderado y su proyeccion no dirigida.
  * Los identificadores se conservan literalmente despues de quitar espacios
  * externos. Las aristas duplicadas se consideran una sola relacion.
  */
@@ -33,6 +33,48 @@ public final class Graph {
         if (directedAdjacency.get(source).add(target)) {
             undirectedAdjacency.get(source).add(target);
             undirectedAdjacency.get(target).add(source);
+        }
+    }
+
+    /** Removes one directed relation and updates the undirected projection. */
+    public boolean removeEdge(String from, String to) {
+        String source = normalizeId(from);
+        String target = normalizeId(to);
+        Set<String> outgoing = directedAdjacency.get(source);
+        if (outgoing == null || !outgoing.remove(target)) {
+            return false;
+        }
+        if (!directedAdjacency.getOrDefault(target, Set.of()).contains(source)) {
+            undirectedAdjacency.get(source).remove(target);
+            undirectedAdjacency.get(target).remove(source);
+        }
+        return true;
+    }
+
+    /** Removes a vertex and all relations incident to it. */
+    public boolean removeVertex(String id) {
+        String vertex = normalizeId(id);
+        if (!directedAdjacency.containsKey(vertex)) {
+            return false;
+        }
+        directedAdjacency.remove(vertex);
+        for (Set<String> outgoing : directedAdjacency.values()) {
+            outgoing.remove(vertex);
+        }
+        rebuildUndirectedProjection();
+        return true;
+    }
+
+    private void rebuildUndirectedProjection() {
+        undirectedAdjacency.clear();
+        for (String vertex : directedAdjacency.keySet()) {
+            undirectedAdjacency.put(vertex, new HashSet<>());
+        }
+        for (Map.Entry<String, Set<String>> entry : directedAdjacency.entrySet()) {
+            for (String target : entry.getValue()) {
+                undirectedAdjacency.get(entry.getKey()).add(target);
+                undirectedAdjacency.get(target).add(entry.getKey());
+            }
         }
     }
 
@@ -77,3 +119,4 @@ public final class Graph {
         return id.trim();
     }
 }
+
