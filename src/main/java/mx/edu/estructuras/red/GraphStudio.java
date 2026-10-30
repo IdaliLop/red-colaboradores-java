@@ -450,7 +450,7 @@ public final class GraphStudio extends JFrame {
         boolean existed = graph.vertices().contains(id);
         graph.addVertex(id);
         canvas.syncVertices();
-        canvas.positions().put(id, new Point2D.Double(point.getX(), point.getY()));
+        canvas.setPosition(id, new Point2D.Double(point.getX(), point.getY()));
         refreshSelectors(id, id);
         onGraphEdited(existed ? "El colaborador ya existía." : "Colaborador agregado: " + id);
     }
@@ -796,6 +796,13 @@ public final class GraphStudio extends JFrame {
         private void autoLayout() {
             points.clear();
             syncVertices();
+        }
+
+        private void setPosition(String vertex, Point2D.Double point) {
+            if (graph.vertices().contains(vertex)) {
+                points.put(vertex, point);
+                repaint();
+            }
         }
 
         private Map<String, Point2D.Double> positions() {
