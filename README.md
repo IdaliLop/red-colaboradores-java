@@ -123,12 +123,13 @@ La carpeta `src/main/java/mx/edu/estructuras/red/` y sus pruebas en `src/test/ja
 
 ## Entorno gráfico interactivo (Swing)
 
-La implementación de la raíz incluye una interfaz de escritorio para explorar y editar la red con el mismo modelo y los mismos algoritmos del examen. Requiere JDK 17 y Maven; Swing forma parte del JDK y no añade dependencias externas.
+La implementación de la raíz incluye una interfaz de escritorio para explorar y editar la red con el mismo modelo y los mismos algoritmos del examen. Requiere un JDK 17 o posterior. Swing forma parte del JDK y no añade dependencias externas; no requiere Maven para ejecutarse.
 
 ~~~powershell
-mvn clean package
-java -cp target/classes mx.edu.estructuras.red.GraphStudio
+.\Iniciar.bat
 ~~~
+
+También puedes abrir `Iniciar.bat` con doble clic desde el Explorador de archivos. El script compila las clases de producción en `build/classes` y luego abre la ventana.
 
 La ventana permite cargar CSV (registros tipo,nodo y tipo,arista) o JSON (claves nodos y aristas), crear y eliminar colaboradores y relaciones dirigidas, mover nodos en el lienzo y ejecutar los análisis del examen. Los resultados incluyen componentes débiles, ciclos dirigidos y no dirigidos, grados, caminos simples más largos en ambas interpretaciones y puntos de articulación. El camino encontrado se anima y resalta sobre el grafo.
 
