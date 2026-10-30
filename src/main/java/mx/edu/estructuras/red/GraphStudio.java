@@ -107,7 +107,7 @@ public final class GraphStudio extends JFrame {
 
         JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphScroll, sidePanel);
         split.setResizeWeight(0.76);
-        split.setDividerLocation(1040);
+        SwingUtilities.invokeLater(() -> split.setDividerLocation(0.74));
         split.setOneTouchExpandable(true);
         root.add(split, BorderLayout.CENTER);
         root.add(buildStatusBar(), BorderLayout.SOUTH);
@@ -403,7 +403,7 @@ public final class GraphStudio extends JFrame {
         refill(edgeFrom, vertices, null);
         refill(edgeTo, vertices, vertices.size() > 1 ? vertices.get(1) : null);
         refill(pathStart, vertices, preferredStart);
-        refill(pathEnd, vertices, preferredEnd == null ? last(vertices) : preferredEnd);
+        refill(pathEnd, vertices, preferredEnd == null || preferredEnd.isEmpty() ? last(vertices) : preferredEnd);
     }
 
     private static void refill(JComboBox<String> combo, List<String> options, String preferred) {
