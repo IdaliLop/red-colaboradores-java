@@ -85,7 +85,7 @@ public final class GraphStudio extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
             } catch (Exception ignored) {
                 // Keep Swing's default look and feel if the platform theme is unavailable.
             }
@@ -284,7 +284,8 @@ public final class GraphStudio extends JFrame {
     }
 
     private void chooseSessionFile() {
-        JFileChooser chooser = fileChooser("Sesión de grafo", "Sesión RED", "redsession", "Texto", "txt");
+        JFileChooser chooser = fileChooser("Sesión de grafo", "Sesión RED", "redsession");
+        chooser.setAcceptAllFileFilterUsed(false);
         if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
             return;
         }
@@ -659,52 +660,78 @@ public final class GraphStudio extends JFrame {
     }
 
     private void applyTheme() {
-        Color background = darkTheme ? new Color(28, 32, 40) : new Color(248, 250, 253);
-        Color panel = darkTheme ? new Color(36, 41, 51) : Color.WHITE;
-        Color foreground = darkTheme ? new Color(229, 233, 240) : new Color(35, 43, 54);
-        Color input = darkTheme ? new Color(47, 54, 66) : Color.WHITE;
-        styleTree(getContentPane(), background, panel, foreground, input);
+        Color background = darkTheme ? new Color(24, 28, 35) : new Color(248, 250, 253);
+        Color panel = darkTheme ? new Color(34, 40, 49) : Color.WHITE;
+        Color foreground = darkTheme ? new Color(235, 239, 246) : new Color(35, 43, 54);
+        Color input = darkTheme ? new Color(43, 51, 63) : Color.WHITE;
+        Color outline = darkTheme ? new Color(82, 96, 115) : new Color(206, 215, 226);
+        Color buttonColor = darkTheme ? new Color(54, 65, 80) : new Color(239, 243, 248);
+        styleTree(getContentPane(), background, panel, foreground, input, outline, buttonColor);
         canvas.setDarkTheme(darkTheme);
         getContentPane().repaint();
     }
 
     private static void styleTree(Component component, Color background, Color panel,
-                                  Color foreground, Color input) {
-        if (component instanceof JPanel) {
-            component.setBackground(panel);
+                                  Color foreground, Color input, Color outline, Color buttonColor) {
+        if (component instanceof JPanel panelComponent) {
+            panelComponent.setBackground(panel);
+            styleBorder(panelComponent.getBorder(), foreground, outline);
         } else if (component instanceof JScrollPane scroll) {
             scroll.setBackground(panel);
             scroll.getViewport().setBackground(panel);
-        } else if (component instanceof JTabbedPane) {
-            component.setBackground(panel);
-            component.setForeground(foreground);
-        } else if (component instanceof JLabel) {
-            component.setForeground(foreground);
+            scroll.setBorder(BorderFactory.createLineBorder(outline));
+        } else if (component instanceof JTabbedPane tabs) {
+            tabs.setBackground(panel);
+            tabs.setForeground(foreground);
+            tabs.setOpaque(true);
+            for (int index = 0; index < tabs.getTabCount(); index++) {
+                tabs.setBackgroundAt(index, panel);
+                tabs.setForegroundAt(index, foreground);
+            }
+        } else if (component instanceof JLabel label) {
+            label.setForeground(foreground);
         } else if (component instanceof JTextArea area) {
             area.setBackground(input);
             area.setForeground(foreground);
             area.setCaretColor(foreground);
+            area.setOpaque(true);
         } else if (component instanceof JTextField field) {
             field.setBackground(input);
             field.setForeground(foreground);
             field.setCaretColor(foreground);
+            field.setOpaque(true);
+            field.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(outline),
+                    BorderFactory.createEmptyBorder(4, 7, 4, 7)));
         } else if (component instanceof JComboBox<?> combo) {
             combo.setBackground(input);
             combo.setForeground(foreground);
+            combo.setOpaque(true);
         } else if (component instanceof JButton button) {
-            button.setBackground(darkThemeButtonColor(background));
+            button.setBackground(buttonColor);
             button.setForeground(foreground);
+            button.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(outline),
+                    BorderFactory.createEmptyBorder(4, 9, 4, 9)));
+            button.setFocusPainted(false);
             button.setOpaque(true);
+            button.setContentAreaFilled(true);
         }
         if (component instanceof java.awt.Container container) {
             for (Component child : container.getComponents()) {
-                styleTree(child, background, panel, foreground, input);
+                styleTree(child, background, panel, foreground, input, outline, buttonColor);
             }
         }
     }
 
-    private static Color darkThemeButtonColor(Color background) {
-        return background.getRed() < 100 ? new Color(55, 63, 77) : new Color(239, 243, 248);
+    private static void styleBorder(javax.swing.border.Border border, Color foreground, Color outline) {
+        if (border instanceof javax.swing.border.TitledBorder titled) {
+            titled.setTitleColor(foreground);
+            titled.setBorder(BorderFactory.createLineBorder(outline));
+        } else if (border instanceof javax.swing.border.CompoundBorder compound) {
+            styleBorder(compound.getOutsideBorder(), foreground, outline);
+            styleBorder(compound.getInsideBorder(), foreground, outline);
+        }
     }
 
     private void showError(String title, Exception exception) {

@@ -45,8 +45,10 @@ public final class GraphSessionFile {
 
     public static Snapshot load(Path path) throws IOException {
         List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
-        if (lines.isEmpty() || !HEADER.equals(lines.get(0))) {
-            throw new IOException("La sesion no tiene una cabecera reconocida.");
+        String header = lines.isEmpty() ? "" : lines.get(0).replace("\uFEFF", "");
+        if (!HEADER.equals(header)) {
+            throw new IOException("El archivo seleccionado no es una sesión .redsession válida. "
+                    + "Abre una sesión guardada con esta aplicación o pulsa Guardar sesión para crear una.");
         }
         Graph graph = new Graph();
         Map<String, Point2D.Double> positions = new LinkedHashMap<>();
